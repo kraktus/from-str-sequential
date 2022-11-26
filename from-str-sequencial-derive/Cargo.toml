@@ -1,5 +1,5 @@
 [package]
-name = "from_str_sequencial_derive"
+name = "from-str-sequencial-derive"
 version = "0.1.0"
 edition = "2021"
 
