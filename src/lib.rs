@@ -2,7 +2,6 @@
 
 pub use from_str_sequential_derive::FromStrSequential;
 
-
 /// sibling trait of `FromStr`. Used on enums with unit and un-named variants, and try to convert the string to each variant sequentially (from top to bottom variant). For unit variant,
 /// the string must be the variant name (case-insentive). For un-named variants, the string must match the `FromStr` implementation of the un-named type.
 /// ## Example
