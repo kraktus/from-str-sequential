@@ -58,7 +58,7 @@ impl CrateVariant {
                 .into()
             }
             Self::Unnamed { ident, ty } => quote! {
-                <#ty>::FromStr(__str).map(Self::<#ident>).map_err(|e| format!("{e}"))
+                <#ty as ::std::str::FromStr>::from_str(__str).map(Self::#ident).map_err(|e| e.to_string())
             }
             .into(),
         }

@@ -6,14 +6,19 @@ pub trait FromStrSequential: Sized {
     fn from_str_sequential(s: &str) -> Result<Self, Self::Err>;
 }
 
-#[derive(FromStrSequential)]
-enum Pancakes {
-    Cookie,
-    Banana,
-}
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[derive(FromStrSequential)]
+    enum Pancakes {
+        Cookie,
+        Banana,
+    }
+
+    #[derive(FromStrSequential)]
+    enum Foo {
+        Bar,
+        Baz(usize),
+    }
 }
