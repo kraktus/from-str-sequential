@@ -2,8 +2,18 @@
 name = "from-str-sequential"
 version = "0.1.0"
 edition = "2021"
+authors = ["Kraktus"]
+description = "A FromStr-like trait for enums, matching the first compatible variant"
+repository = "https://github.com/kraktus/from-str-sequential"
+license = "AGPL-3.0+"
+readme = "README.md"
+keywords = ["utility", "parsing", "string", "derive"]
+categories = ["parsing"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[badges]
+maintenance = { status = "actively-developed" }
 
 [dependencies]
 from-str-sequential-derive = { path = "from-str-sequential-derive" }
