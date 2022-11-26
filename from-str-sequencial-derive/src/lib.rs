@@ -1,9 +1,6 @@
 use proc_macro::{self, TokenStream};
 use quote::quote;
-use syn::{
-    parse_macro_input, Data, DataEnum, DataUnion, DeriveInput, Fields, FieldsNamed, FieldsUnnamed,
-    Ident, Type, Variant,
-};
+use syn::{Data, DataEnum, DeriveInput, Fields, Ident, Type};
 
 #[proc_macro_derive(FromStrSequential)]
 pub fn from_str_sequential_derive(input: TokenStream) -> TokenStream {
@@ -26,7 +23,9 @@ fn impl_from_str_sequential(ident: Ident, data: Data) -> TokenStream {
             .into_iter()
             .map(|f| format!(".or_else(|_| {})", f.from_str_expr()))
             .collect::<String>()
-    ).parse().unwrap();
+    )
+    .parse()
+    .unwrap();
     let gen = quote! {
         impl FromStrSequential for #ident {
             type Err = String;
