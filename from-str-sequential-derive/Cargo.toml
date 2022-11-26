@@ -2,8 +2,6 @@
 name = "from-str-sequential-derive"
 version = "0.1.0"
 edition = "2021"
-version = "0.1.0"
-edition = "2021"
 authors = ["Kraktus"]
 description = "derive crate for `from-str-sequential`"
 repository = "https://github.com/kraktus/from-str-sequential"
