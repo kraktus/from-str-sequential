@@ -1,9 +1,9 @@
 [package]
-name = "from-str-sequencial"
+name = "from-str-sequential"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-from-str-sequencial-derive = { path = "from-str-sequencial-derive" }
+from-str-sequential-derive = { path = "from-str-sequential-derive" }

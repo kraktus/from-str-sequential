@@ -13,19 +13,13 @@ This crate was initially released to allow multiple input formats for `clap::Com
 ```rust
 use from_str_sequential::FromStrSequential;
 
-#[derive(FromStrSequential)]
+#[derive(Debug, FromStrSequential, PartialEq, Eq)]
 enum Foo {
 	Bar,
 	Baz(usize),
 }
 
-assert_eq!(Foo::Bar, Foo::from_str_sequential("bar"));
-assert_eq!(Foo::Bar, Foo::from_str_sequential("BaR"));
-assert_eq!(Foo::Baz(100), Foo::from_str_sequential("100"));
-
-#[derive(clap::Args, Debug)]
-pub struct Cli {
-    #[arg(value_parser = Foo::from_str_sequential)]
-    foo: Foo
-}
+assert_eq!(Foo::Bar, Foo::from_str_sequential("bar").unwrap());
+assert_eq!(Foo::Bar, Foo::from_str_sequential("BaR").unwrap());
+assert_eq!(Foo::Baz(100), Foo::from_str_sequential("100").unwrap());
 ```
