@@ -12,6 +12,7 @@ enum Pancakes {
     Banana,
 }
 
+
 #[cfg(test)]
 mod tests {
     use super::*;

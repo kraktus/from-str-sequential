@@ -19,18 +19,18 @@ fn impl_from_str_sequential(ident: Ident, data: Data) -> TokenStream {
     let Data::Enum(data_enum) = data else {panic!("Only enums are supported")};
     let fields = fields_ident(data_enum);
     let ([first_field], other_fields) = fields.split_at(1) else {panic!("Enum need to have at least one variant")};
-    let sequenced_fom_str = format!(
+    let sequenced_fom_str: proc_macro2::TokenStream = format!(
         "{}{}",
         first_field.from_str_expr(),
         other_fields
             .into_iter()
-            .map(|f| format!(".ok_or_else(|_| {})", f.from_str_expr()))
+            .map(|f| format!(".or_else(|_| {})", f.from_str_expr()))
             .collect::<String>()
-    );
+    ).parse().unwrap();
     let gen = quote! {
         impl FromStrSequential for #ident {
-            type Err = Box<dyn ::std::fmt::Display>;
-            fn from_str_sequential(s: &str) -> Result<Self, Self::Err> {
+            type Err = String;
+            fn from_str_sequential(__str: &str) -> Result<Self, Self::Err> {
                 #sequenced_fom_str
             }
         }
@@ -48,15 +48,17 @@ impl CrateVariant {
     fn from_str_expr(&self) -> TokenStream {
         match self {
             Self::Unit(ident) => {
-                // TODO make the error better
                 quote! {
-                    (__str.to_ascii_lowercase() == stringify!(#ident).to_ascii_lowercase())
-                    .then(Self::<#ident>).ok_or("string not matching")
+                    if __str.to_ascii_lowercase() == stringify!(#ident).to_ascii_lowercase() {
+                        Ok(Self::#ident)
+                    } else {
+                        Err("String not matching variant name (case-insensitive)".to_string())
+                    }
                 }
                 .into()
             }
             Self::Unnamed { ident, ty } => quote! {
-                <#ty>::FromStr(__str).map(Self::<#ident>)
+                <#ty>::FromStr(__str).map(Self::<#ident>).map_err(|e| format!("{e}"))
             }
             .into(),
         }
@@ -84,46 +86,3 @@ fn fields_ident(data_enum: DataEnum) -> Vec<CrateVariant> {
     }
     fields_ident
 }
-
-// #[proc_macro_derive(Describe)]
-// pub fn describe(input: TokenStream) -> TokenStream {
-//     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
-
-//     let description = match data {
-//     syn::Data::Struct(s) => match s.fields {
-//         syn::Fields::Named(FieldsNamed { named, .. }) => {
-//         let idents = named.iter().map(|f| &f.ident);
-//         format!(
-//             "a struct with these named fields: {}",
-//             quote! {#(#idents), *}
-//         )
-//         }
-//         syn::Fields::Unnamed(FieldsUnnamed { unnamed, .. }) => {
-//         let num_fields = unnamed.iter().count();
-//         format!("a struct with {} unnamed fields", num_fields)
-//         }
-//         syn::Fields::Unit => format!("a unit struct"),
-//     },
-//     syn::Data::Enum(DataEnum { variants, .. }) => {
-//         let vs = variants.iter().map(|v| &v.ident);
-//         format!("an enum with these variants: {}", quote! {#(#vs),*})
-//     }
-//     syn::Data::Union(DataUnion {
-//         fields: FieldsNamed { named, .. },
-//         ..
-//     }) => {
-//         let idents = named.iter().map(|f| &f.ident);
-//         format!("a union with these named fields: {}", quote! {#(#idents),*})
-//     }
-//     };
-
-//     let output = quote! {
-//     impl #ident {
-//         fn describe() {
-//         println!("{} is {}.", stringify!(#ident), #description);
-//         }
-//     }
-//     };
-
-//     output.into()
-// }
