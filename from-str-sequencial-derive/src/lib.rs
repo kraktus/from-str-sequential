@@ -18,10 +18,10 @@ fn impl_from_str_sequential(ident: Ident, data: Data) -> TokenStream {
     let ([first_field], other_fields) = fields.split_at(1) else {panic!("Enum need to have at least one variant")};
     let sequenced_fom_str: proc_macro2::TokenStream = format!(
         "{}{}",
-        first_field.from_str_expr(),
+        first_field.to_token_stream(),
         other_fields
-            .into_iter()
-            .map(|f| format!(".or_else(|_| {})", f.from_str_expr()))
+            .iter()
+            .map(|f| format!(".or_else(|_| {})", f.to_token_stream()))
             .collect::<String>()
     )
     .parse()
@@ -44,7 +44,7 @@ enum CrateVariant {
 }
 
 impl CrateVariant {
-    fn from_str_expr(&self) -> TokenStream {
+    fn to_token_stream(&self) -> TokenStream {
         match self {
             Self::Unit(ident) => {
                 quote! {
