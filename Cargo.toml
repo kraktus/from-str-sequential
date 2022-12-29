@@ -16,4 +16,4 @@ categories = ["parsing"]
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-from-str-sequential-derive = "0.1.0"
+from-str-sequential-derive = { path = "from-str-sequential-derive" }

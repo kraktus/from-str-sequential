@@ -85,3 +85,9 @@ fn fields_ident(data_enum: DataEnum) -> Vec<CrateVariant> {
     }
     fields_ident
 }
+
+#[proc_macro]
+pub fn debug_macro(input: TokenStream) -> TokenStream {
+    println!("{input:?}");
+    input
+}

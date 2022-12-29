@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-pub use from_str_sequential_derive::FromStrSequential;
+pub use from_str_sequential_derive::{FromStrSequential, debug_macro};
 
 /// sibling trait of `FromStr`. Used on enums with unit and un-named variants, and try to convert the string to each variant sequentially (from top to bottom variant). For unit variant,
 /// the string must be the variant name (case-insentive). For un-named variants, the string must match the `FromStr` implementation of the un-named type.
@@ -20,6 +20,12 @@ pub trait FromStrSequential: Sized {
     type Err;
 
     fn from_str_sequential(s: &str) -> Result<Self, Self::Err>;
+}
+
+debug_macro! {
+    /// foo
+    #[doc = "bar"]
+    const FOO: usize = 1;
 }
 
 #[cfg(test)]
